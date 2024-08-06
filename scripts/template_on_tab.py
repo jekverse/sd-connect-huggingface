@@ -16,15 +16,6 @@ def upload_to_huggingface(file_path, token, repo_type, repo_id):
     elif repo_type == "dataset":
         api.upload_file(path_or_fileobj=file_path, path_in_repo=os.path.basename(file_path), repo_id=repo_id, repo_type="dataset")
 
-# Fungsi untuk mengupload semua file dalam folder
-def upload_folder(folder_path, token, repo_type, repo_id):
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            if file.endswith('.png'):  # Hanya upload file PNG
-                file_path = os.path.join(root, file)
-                print(f"Uploading file: {file_path}")
-                upload_to_huggingface(file_path, token, repo_type, repo_id)
-
 # Fungsi handler untuk Watchdog
 class WatcherHandler(FileSystemEventHandler):
     def __init__(self, token, repo_type, repo_id):
@@ -34,12 +25,18 @@ class WatcherHandler(FileSystemEventHandler):
     
     def on_created(self, event):
         if not event.is_directory:
-            if event.src_path.endswith('.png'):  # Hanya upload file PNG
-                print(f"New file detected: {event.src_path}")
+            print(f"New file detected: {event.src_path}")
+            if event.src_path.endswith('.tmp'):
+                # Jika file berformat .tmp, tunggu beberapa detik lalu periksa apakah file telah berubah menjadi .png
+                time.sleep(3)
+                new_file_path = event.src_path.replace('.tmp', '.png')
+                if os.path.exists(new_file_path):
+                    print(f"File {new_file_path} detected after renaming from .tmp to .png")
+                    upload_to_huggingface(new_file_path, self.token, self.repo_type, self.repo_id)
+                else:
+                    print(f"File {event.src_path} did not change to .png")
+            elif event.src_path.endswith('.png'):
                 upload_to_huggingface(event.src_path, self.token, self.repo_type, self.repo_id)
-        else:
-            print(f"New folder detected: {event.src_path}")
-            upload_folder(event.src_path, self.token, self.repo_type, self.repo_id)
 
 def start_watcher(token, repo_type, repo_id):
     event_handler = WatcherHandler(token, repo_type, repo_id)
