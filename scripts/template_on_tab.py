@@ -36,11 +36,13 @@ class WatcherHandler(FileSystemEventHandler):
         if not event.is_directory:
             print(f"New file detected: {event.src_path}")
             # Menambahkan jeda untuk memastikan file tersedia sepenuhnya
-            time.sleep(2)
+            time.sleep(10)
             # Upload file tanpa memeriksa ekstensi
             upload_to_huggingface(event.src_path, self.token, self.repo_type, self.repo_id)
         else:
             print(f"New folder detected: {event.src_path}")
+            # Menambahkan jeda untuk memastikan file dalam folder tersedia sepenuhnya
+            time.sleep(10)
             # Upload semua file dalam folder
             upload_folder(event.src_path, self.token, self.repo_type, self.repo_id)
 
