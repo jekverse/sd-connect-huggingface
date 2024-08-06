@@ -11,19 +11,19 @@ from modules import script_callbacks
 # Fungsi untuk mengupload file ke Hugging Face
 def upload_to_huggingface(file_path, token, repo_type, repo_id):
     api = HfApi(token=token)
-    filename = os.path.basename(file_path)  # Mendapatkan nama file
     if repo_type == "model":
-        api.upload_file(path_or_fileobj=file_path, path_in_repo=filename, repo_id=repo_id, repo_type="model")
+        api.upload_file(path_or_fileobj=file_path, path_in_repo=os.path.basename(file_path), repo_id=repo_id, repo_type="model")
     elif repo_type == "dataset":
-        api.upload_file(path_or_fileobj=file_path, path_in_repo=filename, repo_id=repo_id, repo_type="dataset")
+        api.upload_file(path_or_fileobj=file_path, path_in_repo=os.path.basename(file_path), repo_id=repo_id, repo_type="dataset")
 
 # Fungsi untuk mengupload semua file dalam folder
 def upload_folder(folder_path, token, repo_type, repo_id):
     for root, dirs, files in os.walk(folder_path):
         for file in files:
-            file_path = os.path.join(root, file)
-            print(f"Uploading file: {file_path}")
-            upload_to_huggingface(file_path, token, repo_type, repo_id)
+            if file.endswith(".png"):  # Hanya mengupload file .png
+                file_path = os.path.join(root, file)
+                print(f"Uploading file: {file_path}")
+                upload_to_huggingface(file_path, token, repo_type, repo_id)
 
 # Fungsi handler untuk Watchdog
 class WatcherHandler(FileSystemEventHandler):
@@ -33,17 +33,11 @@ class WatcherHandler(FileSystemEventHandler):
         self.repo_id = repo_id
     
     def on_created(self, event):
-        if not event.is_directory:
+        if not event.is_directory and event.src_path.endswith(".png"):  # Hanya mengupload file .png
             print(f"New file detected: {event.src_path}")
-            # Menambahkan jeda untuk memastikan file tersedia sepenuhnya
-            time.sleep(10)
-            # Upload file tanpa memeriksa ekstensi
             upload_to_huggingface(event.src_path, self.token, self.repo_type, self.repo_id)
-        else:
+        elif event.is_directory:
             print(f"New folder detected: {event.src_path}")
-            # Menambahkan jeda untuk memastikan file dalam folder tersedia sepenuhnya
-            time.sleep(10)
-            # Upload semua file dalam folder
             upload_folder(event.src_path, self.token, self.repo_type, self.repo_id)
 
 def start_watcher(token, repo_type, repo_id):
