@@ -20,7 +20,7 @@ def upload_to_huggingface(file_path, token, repo_type, repo_id):
 def upload_folder(folder_path, token, repo_type, repo_id):
     for root, dirs, files in os.walk(folder_path):
         for file in files:
-            if file.lower().endswith(".png"):  # Hanya mengupload file .png
+            if file.endswith('.png'):  # Hanya upload file PNG
                 file_path = os.path.join(root, file)
                 print(f"Uploading file: {file_path}")
                 upload_to_huggingface(file_path, token, repo_type, repo_id)
@@ -33,10 +33,11 @@ class WatcherHandler(FileSystemEventHandler):
         self.repo_id = repo_id
     
     def on_created(self, event):
-        if not event.is_directory and event.src_path.lower().endswith(".png"):  # Hanya mengupload file .png
-            print(f"New file detected: {event.src_path}")
-            upload_to_huggingface(event.src_path, self.token, self.repo_type, self.repo_id)
-        elif event.is_directory:
+        if not event.is_directory:
+            if event.src_path.endswith('.png'):  # Hanya upload file PNG
+                print(f"New file detected: {event.src_path}")
+                upload_to_huggingface(event.src_path, self.token, self.repo_type, self.repo_id)
+        else:
             print(f"New folder detected: {event.src_path}")
             upload_folder(event.src_path, self.token, self.repo_type, self.repo_id)
 
