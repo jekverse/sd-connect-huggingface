@@ -20,9 +20,10 @@ def upload_to_huggingface(file_path, token, repo_type, repo_id):
 def upload_folder(folder_path, token, repo_type, repo_id):
     for root, dirs, files in os.walk(folder_path):
         for file in files:
-            file_path = os.path.join(root, file)
-            print(f"Uploading file: {file_path}")
-            upload_to_huggingface(file_path, token, repo_type, repo_id)
+            if file.lower().endswith(".png"):  # Hanya mengupload file .png
+                file_path = os.path.join(root, file)
+                print(f"Uploading file: {file_path}")
+                upload_to_huggingface(file_path, token, repo_type, repo_id)
 
 # Fungsi handler untuk Watchdog
 class WatcherHandler(FileSystemEventHandler):
