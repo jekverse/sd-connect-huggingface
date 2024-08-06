@@ -11,10 +11,11 @@ from modules import script_callbacks
 # Fungsi untuk mengupload file ke Hugging Face
 def upload_to_huggingface(file_path, token, repo_type, repo_id):
     api = HfApi(token=token)
+    filename = os.path.basename(file_path)  # Mendapatkan nama file
     if repo_type == "model":
-        api.upload_file(path_or_fileobj=file_path, path_in_repo=os.path.basename(file_path), repo_id=repo_id, repo_type="model")
+        api.upload_file(path_or_fileobj=file_path, path_in_repo=filename, repo_id=repo_id, repo_type="model")
     elif repo_type == "dataset":
-        api.upload_file(path_or_fileobj=file_path, path_in_repo=os.path.basename(file_path), repo_id=repo_id, repo_type="dataset")
+        api.upload_file(path_or_fileobj=file_path, path_in_repo=filename, repo_id=repo_id, repo_type="dataset")
 
 # Fungsi untuk mengupload semua file dalam folder
 def upload_folder(folder_path, token, repo_type, repo_id):
