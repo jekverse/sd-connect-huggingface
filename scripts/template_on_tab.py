@@ -33,13 +33,11 @@ class WatcherHandler(FileSystemEventHandler):
         self.repo_id = repo_id
     
     def on_created(self, event):
-        if not event.is_directory:
+        if not event.is_directory and event.src_path.lower().endswith(".png"):  # Hanya mengupload file .png
             print(f"New file detected: {event.src_path}")
-            # Upload file tanpa memeriksa ekstensi
             upload_to_huggingface(event.src_path, self.token, self.repo_type, self.repo_id)
-        else:
+        elif event.is_directory:
             print(f"New folder detected: {event.src_path}")
-            # Upload semua file dalam folder
             upload_folder(event.src_path, self.token, self.repo_type, self.repo_id)
 
 def start_watcher(token, repo_type, repo_id):
