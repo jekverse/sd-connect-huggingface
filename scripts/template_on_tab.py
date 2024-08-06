@@ -44,7 +44,7 @@ class WatcherHandler(FileSystemEventHandler):
 def start_watcher(token, repo_type, repo_id):
     event_handler = WatcherHandler(token, repo_type, repo_id)
     observer = Observer()
-    observer.schedule(event_handler, path='/content/hope', recursive=True)
+    observer.schedule(event_handler, path='/kaggle/working/stable-diffusion-webui/outputs/txt2img-images/2024-08-06', recursive=True)
     observer.start()
     try:
         while True:
@@ -57,7 +57,7 @@ def start_monitoring(token, repo_type, repo_id):
     thread = threading.Thread(target=start_watcher, args=(token, repo_type, repo_id))
     thread.daemon = True
     thread.start()
-    return "Monitoring started for directory /content/hope."
+    return "Monitoring started for directory /kaggle/working/stable-diffusion-webui/outputs/txt2img-images/2024-08-06."
 
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
