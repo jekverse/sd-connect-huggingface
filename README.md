@@ -1,10 +1,6 @@
-Berikut adalah deskripsi untuk file `README.md` dalam bahasa Indonesia dengan format yang mudah dibaca:
+# EKSTENSI AUTOMASI UPLOAD OUPUT KE HUGGINGFACE UNTUK STABLE DIFFUSION
 
----
-
-# Pengunggah Otomatis ke Hugging Face
-
-Script ini secara otomatis memantau direktori tertentu untuk file gambar baru dan mengunggahnya ke repository Hugging Face. Script ini dirancang untuk bekerja dengan gambar yang dihasilkan oleh Stable Diffusion dan dapat menangani format file `.tmp` dan `.png`.
+Script ini secara otomatis memantau direktori output untuk file gambar baru dan mengunggahnya ke repository Hugging Face. Script ini dirancang untuk bekerja dengan gambar yang dihasilkan oleh Stable Diffusion. 
 
 ## Fitur
 
@@ -15,11 +11,7 @@ Script ini secara otomatis memantau direktori tertentu untuk file gambar baru da
 
 ## Penggunaan
 
-1. Jalankan script untuk memulai antarmuka Gradio:
-   ```bash
-   python your_script.py
-   ```
-2. Di antarmuka Gradio:
+Di antarmuka Gradio:
    - Masukkan token Hugging Face Anda.
    - Pilih tipe repository (`model` atau `dataset`).
    - Masukkan ID repository tempat file akan diunggah.
@@ -35,16 +27,9 @@ Script ini secara otomatis memantau direktori tertentu untuk file gambar baru da
 ## Kustomisasi
 
 - Direktori yang dipantau dapat diubah dengan memodifikasi `path` di fungsi `start_watcher`.
-- Script ini mendukung berbagai tipe repository (`model`, `dataset`). Pastikan tipe repository yang benar dipilih di antarmuka Gradio.
+- Script ini mendukung berbagai tipe repository (`model`, `dataset`). Pastikan tipe repository yang benar dipilih di antarmuka Gradio@.
 
-## Kontribusi
-
-Silakan fork repository ini, laporkan masalah, atau berkontribusi melalui pull request.
-
-## Lisensi
-
-Proyek ini dilisensikan di bawah MIT License.
 
 ---
 
-README ini menyajikan deskripsi yang jelas mengenai fungsionalitas script dan memberikan panduan kepada pengguna tentang cara menginstal dan menggunakannya dengan efektif.
+@jekverse
