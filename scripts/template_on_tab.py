@@ -38,10 +38,10 @@ class WatcherHandler(FileSystemEventHandler):
             elif event.src_path.endswith('.png'):
                 upload_to_huggingface(event.src_path, self.token, self.repo_type, self.repo_id)
 
-def start_watcher(token, repo_type, repo_id):
+def start_watcher(directory, token, repo_type, repo_id):
     event_handler = WatcherHandler(token, repo_type, repo_id)
     observer = Observer()
-    observer.schedule(event_handler, path='/kaggle/working/stable-diffusion-webui/outputs/txt2img-images/2024-08-07', recursive=True)
+    observer.schedule(event_handler, path=directory, recursive=True)
     observer.start()
     try:
         while True:
@@ -50,15 +50,16 @@ def start_watcher(token, repo_type, repo_id):
         observer.stop()
     observer.join()
 
-def start_monitoring(token, repo_type, repo_id):
-    thread = threading.Thread(target=start_watcher, args=(token, repo_type, repo_id))
+def start_monitoring(directory, token, repo_type, repo_id):
+    thread = threading.Thread(target=start_watcher, args=(directory, token, repo_type, repo_id))
     thread.daemon = True
     thread.start()
-    return "Monitoring started for directory /kaggle/working/stable-diffusion-webui/outputs/txt2img-images/2024-08-07."
+    return f"Monitoring started for directory {directory}."
 
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Row():
+            directory_input = gr.Textbox(label="Directory to Monitor", placeholder="Enter the directory path")
             token_input = gr.Textbox(label="Hugging Face Token", type="password")
             repo_type_input = gr.Radio(["model", "dataset"], label="Repository Type")
             repo_id_input = gr.Textbox(label="Repository ID")
@@ -68,7 +69,7 @@ def on_ui_tabs():
         
         start_button.click(
             start_monitoring,
-            inputs=[token_input, repo_type_input, repo_id_input],
+            inputs=[directory_input, token_input, repo_type_input, repo_id_input],
             outputs=[output_text]
         )
     
