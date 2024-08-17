@@ -13,14 +13,6 @@ Script ini secara otomatis memantau direktori tertentu untuk file gambar baru da
 - **Integrasi dengan Hugging Face**: Mengunggah file langsung ke repository Hugging Face, mendukung tipe repository model dan dataset.
 - **Antarmuka Gradio**: Menyediakan antarmuka web yang intuitif untuk memulai pemantauan dan pengunggahan file.
 
-## Instalasi
-
-1. Clone repository ini.
-2. Install paket Python yang diperlukan:
-   ```bash
-   pip install gradio watchdog huggingface_hub
-   ```
-
 ## Penggunaan
 
 1. Jalankan script untuk memulai antarmuka Gradio:
